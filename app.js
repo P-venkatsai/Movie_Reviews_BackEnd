@@ -1,16 +1,20 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const cors=require('cors')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 const mongoose=require('mongoose')
 const Dishes=require('./models/dishes')
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var app = express();
-const url='mongodb://localhost:27017/confusion'
-const connect=mongoose.connect(url)
-
+app.use(cors())
+app.options('*',cors())
+//const url='mongodb://localhost:27017/confusion'
+const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
+const connect=mongoose.connect(url,{useNewUrlParser:true})
 connect.then((db)=>
 {
   console.log("connected correctly to the server")
@@ -25,14 +29,22 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
+//app.use(cookieParser('12345-67890-09876-54321'));
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(session({
+  name:'session-id',
+  secret:'12345-67890-09876-54321',
+  resave:false,
+  saveUninitialized:false,
+  store:new FileStore()
+  }));
+app.use('/courseusers',require('./routes/courseusers'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dishes',require('./routes/dishrouter'))
 app.use('/promotions',require('./routes/promotions'))
 app.use('/leaders',require('./routes/leaders'))
+app.use('/users',require('./routes/users1'))
+app.use('/movies',require('./routes/moviereview'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
