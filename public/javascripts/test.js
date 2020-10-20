@@ -1,24 +1,27 @@
+let token;
 document.querySelector("#username").addEventListener("change",(e)=>
 {
     console.log("hai")
     const req=new XMLHttpRequest()
-    // let params=
-    // {
-    //     name:`venkat sai`,
-    //     email:`venkatsaivenke@gmail.com`,
-    //     password:`Srilatha@1`
-    // }
+     let params=
+     {
+         username:"enkat",
+         password:"S@"
+     }
         req.addEventListener("readystatechange",(e)=>
         {
             if(e.target.readyState==4&&e.target.status==200)
             {
-                console.log(JSON.parse(e.currentTarget.responseText))
+                //let data=JSON.parse(e.currentTarget.responseText)
+                //token=data.token
+                //localStorage.setItem("remtoken",token);
+                //console.log(token)
+                console.log(e.currentTarget.responseText)
             }
         })
-        req.open("POST",`http://localhost:3000/courseusers/login`,true)
+        req.open("POST",`http://localhost:3000/users/login`,true)
       req.setRequestHeader('Content-type','application/json')
-      req.setRequestHeader("Authorization", "Basic " + btoa("aa"+ ":" +"aa")); 
-        req.send()
+        req.send(JSON.stringify(params))
 })
 document.querySelector("#password").addEventListener("change",(e)=>
 {
@@ -36,10 +39,11 @@ document.querySelector("#email").addEventListener("change",(e)=>
      {
         if(e.target.readyState==4&&e.target.status==200)
         {
-            let x=JSON.parse(e.currentTarget.responseText)
-            console.log(x)
+            console.log(e.currentTarget.responseText)
         }
      }) 
-     req.open("GET",`http://localhost:3000/movies`)
+     req.open("GET",`http://localhost:3000/users/verifyuser`)
+    let token=localStorage.getItem("token")
+    req.setRequestHeader('Authorization',`Bearer ${token}`)
      req.send()
 })

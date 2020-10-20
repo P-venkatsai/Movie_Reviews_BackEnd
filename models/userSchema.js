@@ -1,24 +1,17 @@
-const mongoose = require('mongoose');
-require('mongoose-currency').loadType(mongoose);
-const Currency=mongoose.Types.Currency;
-const Schema = mongoose.Schema;
-const userSchema=new Schema({
-    _id:
-    {
-        type:String,
-        required:true
-    },
-    name:
-    {
-        type:String,
-        required:true
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var passportLocalMongoose=require('passport-local-mongoose')
+var User = new Schema({
+    admin:   {
+        type: Boolean,
+        default: false
     },
     email:
     {
         type:String,
-        required:true
+        unique:true
     },
-    password:
+    registerdate:
     {
         type:String,
         required:true
@@ -30,9 +23,6 @@ const userSchema=new Schema({
             rating:{type:Number,min:0,max:5,required:true}
         }
     ]   
-},{
-    timestamps:true
-})
-var Users = mongoose.model('user', userSchema);
-
-module.exports =Users;
+});
+User.plugin(passportLocalMongoose);
+module.exports = mongoose.model('user',User);

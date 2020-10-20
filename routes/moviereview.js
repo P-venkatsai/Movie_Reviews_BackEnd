@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const MovieRouter = express.Router();
 const mongoose=require('mongoose')
 const Movies=require('../models/movieSchema')
+const authenticate=require('../authenticate')
 MovieRouter.use(bodyParser.json());
 MovieRouter.use(cookieParser('12345-67890-09876-54321'));
 MovieRouter.route('/')
@@ -43,7 +44,7 @@ MovieRouter.route('/:movieId')
       }
       else
       {
-          res.statusCode=403;
+          res.statusCode=201;
           res.end(null);
       }
   },(err)=>next(err))
@@ -61,20 +62,18 @@ Movies.create(req.body)
 },(err)=>next(err))
 .catch((err)=>next(err))
 });
-MovieRouter.route('/:userId/:movieId/comment')
-.post((req,res,next) => 
+MovieRouter.route('/:movieId/comment')
+.post(authenticate.verifyUser,(req,res,next) => 
 {
-    console.log(req.signedCookies.user)
-    Movies.create(req.body)
     Movies.findById(req.params.movieId)
     .then((Movie)=>
     {
-        if (Movie != null && Movie.comments.id(req.params.userId) != null) {
+        if (Movie != null && Movie.comments.id(req.user._id) != null) {
             if (req.body.rating) {
-                Movie.comments.id(req.params.userId).rating = req.body.rating;
+                Movie.comments.id(req.user._id).rating = req.body.rating;
             }
             if (req.body.comment) {
-                Movie.comments.id(req.params.userId).comment = req.body.comment;                
+                Movie.comments.id(req.user._id).comment = req.body.comment;                
             }
             Movie.save()
             .then((Movie) => {
@@ -85,7 +84,13 @@ MovieRouter.route('/:userId/:movieId/comment')
         }  
         else if(Movie!=null)
         {
-            Movie.comments.push(req.body);
+            Movie.comments.push({
+                _id:req.user._id,
+                author:req.user.username,
+                comment:req.body.comment,
+                rating:req.body.rating
+               //updatedat:req.body.updatedat,
+            });
             Movie.save()
             .then((Movie)=>
             {
