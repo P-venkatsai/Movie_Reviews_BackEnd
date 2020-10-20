@@ -17,13 +17,13 @@ var app = express();
 //app.use(cors())
 //app.options('*',cors())
 var corsOptions={
-  origin:'http://127.0.0.1:5501',
+  origin:'https://projectmovieereviews.netlify.app',
   optionSucessStatus:200,
   credentials:true
 }
 app.use(cors(corsOptions))
-const url='mongodb://localhost:27017/confusion'
-//const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
+//const url='mongodb://localhost:27017/confusion'
+const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
 const connect=mongoose.connect(url,{useNewUrlParser:true})
 connect.then((db)=>
 {
