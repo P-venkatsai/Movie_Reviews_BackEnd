@@ -22,8 +22,8 @@ app.options('*',cors())
 
 // }
 // app.use(cors(corsOptions))
- const url='mongodb://localhost:27017/confusion'
-//const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
+ //const url='mongodb://localhost:27017/confusion'
+const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
 const connect=mongoose.connect(url,{useNewUrlParser:true})
 connect.then((db)=>
 {
