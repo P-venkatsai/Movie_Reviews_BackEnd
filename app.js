@@ -19,10 +19,9 @@ app.options('*',cors())
 // var corsOptions={
 //   origin:'http://127.0.0.1:5501',
 //   optionSucessStatus:200,
-
 // }
 // app.use(cors(corsOptions))
- //const url='mongodb://localhost:27017/confusion'
+//  const url='mongodb://localhost:27017/confusion'
 const url = "mongodb+srv://venkatsai:venkatsai@sample.jmaef.mongodb.net/test?retryWrites=true&w=majority";
 const connect=mongoose.connect(url,{useNewUrlParser:true})
 connect.then((db)=>
